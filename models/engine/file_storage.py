@@ -85,8 +85,11 @@ class FileStorage:
         if cls is not None and id is not None:
             new_dict_get = ""
             for key, value in self.__objects.items():
-                print("key filestorage {}".format(key))
                 if cls == value.__class__ or cls == value.__class__.__name__:
-                    new_dict_get = ""
-            return new_dict_get
+                    classname = value.__class__.__name__
+                    only_id = key.replace(classname, "")
+                    final_id = only_id.replace(".", "")
+                    if final_id == id:
+                        new_dict_get = "{}".format(value)
+                        return new_dict_get
         return None
