@@ -77,7 +77,7 @@ class DBStorage:
 
     def get(self, cls, id):
         '''get an object depending id and class'''
-	'''cls: class name'''
+        '''cls: class name'''
         '''id: string representing the object ID'''
         final = ""
         if cls is not None and id is not None:
@@ -92,8 +92,8 @@ class DBStorage:
         return None
 
     def count(self, cls=None):
-        '''count objects for every class'''	
-	'''cls: class name'''
+        '''count objects for every class'''
+        '''cls: class name'''
         count = 0
         if cls is None:
             universe = self.all()
