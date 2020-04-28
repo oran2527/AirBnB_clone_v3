@@ -71,6 +71,7 @@ class FileStorage:
 
     def count(self, cls=None):
         '''count objects'''
+        '''cls: class name'''        
         count = 0
         if cls is None:
             universe = self.all()
@@ -81,7 +82,9 @@ class FileStorage:
         return count
 
     def get(self, cls, id):
-        '''get an object with a class and id'''
+        '''get an object with a class and id'''        	   
+	'''cls: class name'''
+        '''id: string representing the object ID'''		  
         if cls is not None and id is not None:
             new_dict_get = ""
             for key, value in self.__objects.items():
