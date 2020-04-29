@@ -57,16 +57,19 @@ def deletePlace(place_id):
 def createPlace(city_id):
     """Create a place for a city if not error 404
     """
-    place = request.get_json()
-    if not place:
-        abort(400, {'Not a JSON'})
-    if 'name' not in place:
-        abort(400, {'Missing name'})
     cities = storage.get('City', city_id)
     if not cities:
         abort(404)
-    place.update(city_id=city_id)
+    place = request.get_json()
+    if not place:
+        abort(400, {'Not a JSON'})
+    userid = storage.get('User', place['user_id'])
+    if not userid:
+        abort(400, {'Missing user_id'})
+    if 'name' not in place:
+        abort(400, {'Missing name'})
     new_place = Place(**place)
+    new_place.city_id = city_id
     storage.new(new_place)
     storage.save()
     return jsonify(new_place.to_dict()), 201
