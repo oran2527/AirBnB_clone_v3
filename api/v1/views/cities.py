@@ -82,24 +82,15 @@ def createCity(state_id):
 def updateCity(city_id):
     """Update a city if not error 404
     """
-    flag_city = 0
     city = request.get_json()
     if not city:
         abort(400, {'Not a JSON'})
-    cities = storage.all('City')
-    text_final = "{}.{}".format('City', city_id)
-    for key, value in cities.items():
-        if key == text_final:
-            flag_city = 1
-            break
-    if flag_city == 0:
-        abort(404)
-    cit = storage.get('City', city_id)
-    if not cit:
+    cities = storage.get('City', city_id)
+    if not cities:
         abort(404)
     ignore = ['id', 'state_id', 'created_at', 'updated_at']
     for key, value in city.items():
         if key not in ignore:
-            setattr(cit, key, value)
+            setattr(cities, key, value)
     storage.save()
-    return jsonify(cit.to_dict()), 200
+    return jsonify(cities.to_dict()), 200
