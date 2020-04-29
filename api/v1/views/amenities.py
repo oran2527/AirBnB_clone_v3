@@ -25,7 +25,8 @@ def displayAmenities():
     return jsonify(list_amenities)
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['GET'], strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>', methods=['GET\
+'], strict_slashes=False)
 def displayAmenityById(amenity_id):
     """Return amenity by id
     """
@@ -43,7 +44,8 @@ def displayAmenityById(amenity_id):
     return jsonify(list_amenities)
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['DELETE'], strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>', methods=['DELETE\
+'], strict_slashes=False)
 def deleteAmenity(amenity_id):
     """Delete an amenity if not error 404
     """
@@ -77,7 +79,8 @@ def createAmenity():
     return jsonify(new_amenity.to_dict()), 201
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['PUT'], strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>', methods=['PUT\
+'], strict_slashes=False)
 def updateAmenity(amenity_id):
     """Update an amenity if not error 404
     """
