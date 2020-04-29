@@ -30,18 +30,10 @@ def displayAmenities():
 def displayAmenityById(amenity_id):
     """Return amenity by id
     """
-    list_amenities = []
-    flag = 0
-    amenities = storage.all('Amenity')
-    for key, value in amenities.items():
-        am_final = "Amenity.{}".format(amenity_id)
-        if key == am_final:
-            flag = 1
-            list_amenities.append(value.to_dict())
-            break
-    if flag == 0:
+    amen = storage.get('Amenity', amenity_id)
+    if not amen:
         abort(404)
-    return jsonify(list_amenities)
+    return jsonify(amen.to_dict())
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['DELETE\
@@ -49,13 +41,12 @@ def displayAmenityById(amenity_id):
 def deleteAmenity(amenity_id):
     """Delete an amenity if not error 404
     """
-    list_amenities = {}
-    amenity = storage.get('Amenity', amenity_id)
-    if amenity:
-        storage.delete(amenity)
-        storage.save()
-        return jsonify(list_amenities), 200
-    abort(404)
+    amen = storage.get('Amenity', amenity_id)
+    if not amen:
+        abort(404)
+    storage.delete(amen)
+    storage.save()
+    return jsonify({})
 
 
 @app_views.route('/amenities', methods=['POST'], strict_slashes=False)
