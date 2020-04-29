@@ -45,22 +45,18 @@ def displayCities(text):
         return jsonify(list_cities)
 
 
-@app_views.route('/cities/<text>', methods=['DELETE'], strict_slashes=False)
-def deleteCity(text):
+@app_views.route('/cities/<city_id>', methods=['DELETE'], strict_slashes=False)
+def deleteCity(city_id):
     """Delete a city if not error 404
     """
     list_cities = {}
-    flag = 0
     cities = storage.all('City')
-    for key, value in cities.items():
-        if value.id == text:
-            flag = 1
-            storage.delete(cities[key])
-            storage.save()
-            break
-    if flag == 0:
-        abort(404)
-    return jsonify(list_cities.to_dict()), 200
+    city = storage.get('City', city_id)
+    if city:
+        storage.delete(city)
+        storage.save()
+        return jsonify({})
+    abort(404)
 
 
 @app_views.route('/states/<text>/cities', methods=['POST\
