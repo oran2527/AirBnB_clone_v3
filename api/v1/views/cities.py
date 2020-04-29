@@ -18,15 +18,23 @@ from models.state import State
 def displayCitiesByState(state_id):
     """Return the cities by state if not error 404
     """
-    list_cities = []
-    cities = storage.all('City')
-    for key, value in cities.items():
-        if value.state_id == state_id:
-            list_cities.append(value.to_dict())
-    if list_cities == []:
+    state = storage.get('State', state_id)
+    if not state:
         abort(404)
-    else:
-        return jsonify(list_cities)
+    lista = []
+    for i in state.cities:
+        lista.append(i.to_dict())
+    return jsonify(lista)
+
+    # list_cities = []
+    # cities = storage.all('City')
+    # for key, value in cities.items():
+    #     if value.state_id == state_id:
+    #         list_cities.append(value.to_dict())
+    # if list_cities == []:
+    #     abort(404)
+    # else:
+    #     return jsonify(list_cities)
 
 
 @app_views.route('/cities/<city_id>', methods=['GET'], strict_slashes=False)
