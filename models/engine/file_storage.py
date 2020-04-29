@@ -85,14 +85,9 @@ class FileStorage:
         '''get an object with a class and id'''
         '''cls: class name'''
         '''id: string representing the object ID'''
-        if cls is not None and id is not None:
-            new_dict_get = ""
-            for key, value in self.__objects.items():
-                if cls == value.__class__ or cls == value.__class__.__name__:
-                    classname = value.__class__.__name__
-                    only_id = key.replace(classname, "")
-                    final_id = only_id.replace(".", "")
-                    if final_id == id:
-                        new_dict_get = "{}".format(value)
-                        return new_dict_get
+        if cls and id:
+            cls = eval(cls) if type(cls) == str else cls
+            key = cls.__name__ + '.' + id
+            if key in self.__objects:
+                return self.__objects.get(key)
         return None

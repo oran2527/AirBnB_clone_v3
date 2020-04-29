@@ -79,17 +79,11 @@ class DBStorage:
         '''get an object depending id and class'''
         '''cls: class name'''
         '''id: string representing the object ID'''
-        final = ""
-        if cls is not None and id is not None:
-            for clss in classes:
-                if cls is None or cls is classes[clss] or cls is clss:
-                    objs = self.__session.query(classes[clss]).all()
-                    for obj in objs:
-                        if obj.id == id:
-                            final = "[{}] ({}) {}\
-".format(obj.__class__.__name__, obj.id, obj.__dict__)
-                            return (final)
-        return None
+        objs = None
+        if cls and id:
+            cls = eval(cls) if type(cls) == str else cls
+            obj_final = self.__session.query(cls).filter_by(id=id).first()
+        return (obj_final)
 
     def count(self, cls=None):
         '''count objects for every class'''

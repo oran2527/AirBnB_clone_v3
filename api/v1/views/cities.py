@@ -54,10 +54,10 @@ def deleteCity(text):
         if value.id == text:
             flag = 1
             storage.delete(cities[key])
-            storage.save()
-            return jsonify(list_cities)
+            storage.save()            
     if flag == 0:
         abort(404)
+    return jsonify(list_cities)	
 
 
 @app_views.route('/states/<text>/cities', methods=['POST'], strict_slashes=False)
