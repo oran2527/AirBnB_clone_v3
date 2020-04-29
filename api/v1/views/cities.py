@@ -13,15 +13,15 @@ from models.city import City
 from models.state import State
 
 
-@app_views.route('/states/<text>/cities', methods=['GET\
+@app_views.route('/states/<state_id>/cities', methods=['GET\
 '], strict_slashes=False)
-def displayCitiesByState(text):
+def displayCitiesByState(state_id):
     """Return the cities by state if not error 404
     """
     list_cities = []
     cities = storage.all('City')
     for key, value in cities.items():
-        if value.state_id == text:
+        if value.state_id == state_id:
             list_cities.append(value.to_dict())
     if list_cities == []:
         abort(404)
@@ -29,20 +29,14 @@ def displayCitiesByState(text):
         return jsonify(list_cities)
 
 
-@app_views.route('/cities/<text>', methods=['GET'], strict_slashes=False)
-def displayCities(text):
+@app_views.route('/cities/<city_id>', methods=['GET'], strict_slashes=False)
+def displayCities(city_id):
     """Return the cities if not error 404
     """
-    list_cities = []
-    cities = storage.all('City')
-    for key, value in cities.items():
-        if value.id == text:
-            list_cities.append(value.to_dict())
-            break
-    if list_cities == []:
+    city = storage.get('City', city_id)
+    if not city:
         abort(404)
-    else:
-        return jsonify(list_cities)
+    return jsonify(city.to_dict())
 
 
 @app_views.route('/cities/<city_id>', methods=['DELETE'], strict_slashes=False)
@@ -50,7 +44,6 @@ def deleteCity(city_id):
     """Delete a city if not error 404
     """
     list_cities = {}
-    cities = storage.all('City')
     city = storage.get('City', city_id)
     if city:
         storage.delete(city)
@@ -59,9 +52,9 @@ def deleteCity(city_id):
     abort(404)
 
 
-@app_views.route('/states/<text>/cities', methods=['POST\
+@app_views.route('/states/<state_id>/cities', methods=['POST\
 '], strict_slashes=False)
-def createCity(text):
+def createCity(state_id):
     """Create a city if not error 404
     """
     flag_state_id = 0
@@ -71,22 +64,22 @@ def createCity(text):
     if 'name' not in city:
         abort(400, {'Missing name'})
     states = storage.all('State')
-    text_final = "{}.{}".format('State', text)
+    text_final = "{}.{}".format('State', state_id)
     for key, value in states.items():
         if key == text_final:
             flag_state_id = 1
             break
     if flag_state_id == 0:
         abort(404)
-    city.update(state_id=text)
+    city.update(state_id=state_id)
     new_city = City(**city)
     storage.new(new_city)
     storage.save()
     return jsonify(new_city.to_dict()), 201
 
 
-@app_views.route('/cities/<text>', methods=['PUT'], strict_slashes=False)
-def updateCity(text):
+@app_views.route('/cities/<city_id>', methods=['PUT'], strict_slashes=False)
+def updateCity(city_id):
     """Update a city if not error 404
     """
     flag_city = 0
@@ -94,14 +87,14 @@ def updateCity(text):
     if not city:
         abort(400, {'Not a JSON'})
     cities = storage.all('City')
-    text_final = "{}.{}".format('City', text)
+    text_final = "{}.{}".format('City', city_id)
     for key, value in cities.items():
         if key == text_final:
             flag_city = 1
             break
     if flag_city == 0:
         abort(404)
-    cit = storage.get('City', text)
+    cit = storage.get('City', city_id)
     if not cit:
         abort(404)
     for key, value in city.items():
