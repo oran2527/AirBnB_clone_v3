@@ -27,7 +27,7 @@ def displayPlacesByCity(city_id):
     if list_places == []:
         abort(404)
     else:
-        return jsonify(list_places)
+        return jsonify(list_places.to_dict())
 
 
 @app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
