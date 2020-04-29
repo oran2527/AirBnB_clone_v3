@@ -74,6 +74,10 @@ def createUser():
         abort(400, {'Not a JSON'})
     if 'name' not in user:
         abort(400, {'Missing name'})
+    if 'email' not in user:
+        abort(400, {'Missing name'})
+    if 'password' not in user:
+        abort(400, {'Missing password'})
     new_user = User(**user)
     storage.new(new_user)
     storage.save()
