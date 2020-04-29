@@ -95,7 +95,9 @@ def updateUser(user_id):
     us = storage.get('User', user_id)
     if not us:
         abort(404)
+    ignore = ['id', 'email', 'created_at', 'updated_at']
     for key, value in user.items():
-        setattr(us, key, value)
+        if key not in ignore:
+            setattr(us, key, value)
     storage.save()
     return jsonify(us.to_dict()), 200
