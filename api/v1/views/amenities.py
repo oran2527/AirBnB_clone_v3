@@ -50,17 +50,12 @@ def deleteAmenity(amenity_id):
     """Delete an amenity if not error 404
     """
     list_amenities = {}
-    flag = 0
-    amenities = storage.all('Amenity')
-    for key, value in amenities.items():
-        if value.id == amenity_id:
-            flag = 1
-            storage.delete(amenities[key])
-            storage.save()
-            break
-    if flag == 0:
-        abort(404)
-    return jsonify(list_amenities), 200
+    amenity = storage.get('Amenity', amenity_id)
+    if amenity:
+        storage.delete(amenity)
+        storage.save()
+        return jsonify(list_amenities), 200
+    abort(404)
 
 
 @app_views.route('/amenities', methods=['POST'], strict_slashes=False)
@@ -92,7 +87,9 @@ def updateAmenity(amenity_id):
     amen = storage.get('Amenity', amenity_id)
     if not amen:
         abort(404)
+    ignore = ['id', 'created_at', 'updated_at']
     for key, value in amenity.items():
-        setattr(amen, key, value)
+        if key not in ignore:
+            setattr(amen, key, value)
     storage.save()
     return jsonify(amen.to_dict()), 200
