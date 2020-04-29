@@ -65,7 +65,7 @@ def deleteUser(user_id):
 
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
-def createAmenity():
+def createUser():
     """Create an user if not error 404
     """
     flag = 0
