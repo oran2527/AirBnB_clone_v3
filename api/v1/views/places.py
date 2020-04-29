@@ -84,12 +84,10 @@ def updatePlace(place_id):
     places = storage.get('Place', place_id)
     if not places:
         abort(404)
-    pla = storage.get('Place', place_id)
-    if not pla:
-        abort(404)
+
     ignore = ['id', 'user_id', 'city_id', 'created_at', 'updated_at']
     for key, value in place.items():
         if key not in ignore:
-            setattr(pla, key, value)
+            setattr(places, key, value)
     storage.save()
-    return jsonify(pla.to_dict()), 200
+    return jsonify(places.to_dict()), 200
