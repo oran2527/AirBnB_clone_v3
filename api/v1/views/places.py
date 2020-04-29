@@ -27,7 +27,7 @@ def displayPlacesByCity(city_id):
     if list_places == []:
         abort(404)
     else:
-        return jsonify(list_cities)
+        return jsonify(list_places)
 
 
 @app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
@@ -40,7 +40,7 @@ def displayPlacesbyId(place_id):
         if value.id == place_id:
             list_places.append(value.to_dict())
             break
-    if list_cities == []:
+    if list_places == []:
         abort(404)
     else:
         return jsonify(list_places)
@@ -62,7 +62,7 @@ def deletePlace(place_id):
             break
     if flag == 0:
         abort(404)
-    return jsonify(list_places.to_dict()), 200
+    return jsonify(list_places), 200
 
 
 @app_views.route('/cities/<city_id>/places', methods=['POST\
@@ -77,8 +77,8 @@ def createPlace(city_id):
     if 'name' not in place:
         abort(400, {'Missing name'})
     cities = storage.all('City')
-    text_final = "{}.{}".format('City', text)
-    for key, value in states.items():
+    text_final = "{}.{}".format('City', city_id)
+    for key, value in cities.items():
         if key == text_final:
             flag_city_id = 1
             break
@@ -100,7 +100,7 @@ def updatePlace(place_id):
     if not place:
         abort(400, {'Not a JSON'})
     places = storage.all('Place')
-    text_final = "{}.{}".format('Place', text)
+    text_final = "{}.{}".format('Place', place_id)
     for key, value in places.items():
         if key == text_final:
             flag_place = 1
@@ -110,7 +110,9 @@ def updatePlace(place_id):
     pla = storage.get('Place', place_id)
     if not pla:
         abort(404)
+    ignore = ['id', 'user_id', 'city_id', 'created_at', 'updated_at']
     for key, value in place.items():
-        setattr(pla, key, value)
+        if key not in ignore:
+            setattr(pla, key, value)
     storage.save()
     return jsonify(pla.to_dict()), 200
