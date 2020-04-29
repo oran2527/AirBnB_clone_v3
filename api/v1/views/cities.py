@@ -57,22 +57,17 @@ def deleteCity(city_id):
 def createCity(state_id):
     """Create a city if not error 404
     """
+    state = storage.get('State', state_id)
+    if not state:
+        abort(404)
     flag_state_id = 0
     city = request.get_json()
     if not city:
         abort(400, {'Not a JSON'})
     if 'name' not in city:
         abort(400, {'Missing name'})
-    states = storage.all('State')
-    text_final = "{}.{}".format('State', state_id)
-    for key, value in states.items():
-        if key == text_final:
-            flag_state_id = 1
-            break
-    if flag_state_id == 0:
-        abort(404)
-    city.update(state_id=state_id)
     new_city = City(**city)
+    setattr(city, "state_id", state_id)
     storage.new(new_city)
     storage.save()
     return jsonify(new_city.to_dict()), 201
