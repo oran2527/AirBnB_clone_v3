@@ -97,7 +97,9 @@ def updateCity(city_id):
     cit = storage.get('City', city_id)
     if not cit:
         abort(404)
+    ignore = ['id', 'state_id', 'created_at', 'updated_at']
     for key, value in city.items():
-        setattr(cit, key, value)
+        if key not in ignore:
+            setattr(cit, key, value)
     storage.save()
     return jsonify(cit.to_dict()), 200
