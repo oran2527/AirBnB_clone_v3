@@ -35,15 +35,10 @@ def displayPlacesbyId(place_id):
     """Return the places by id if not error 404
     """
     list_places = []
-    places = storage.all('Place')
-    for key, value in places.items():
-        if value.id == place_id:
-            list_places.append(value.to_dict())
-            break
-    if list_places == []:
+    place = storage.get('Place', place_id)
+    if not place:
         abort(404)
-    else:
-        return jsonify(list_places)
+    return jsonify(place.to_dict())
 
 
 @app_views.route('/places/<place_id>', methods=['DELETE\
@@ -52,17 +47,12 @@ def deletePlace(place_id):
     """Delete a place if not error 404
     """
     list_places = {}
-    flag = 0
-    places = storage.all('Place')
-    for key, value in places.items():
-        if value.id == place_id:
-            flag = 1
-            storage.delete(places[key])
-            storage.save()
-            break
-    if flag == 0:
-        abort(404)
-    return jsonify(list_places), 200
+    place = storage.get('Place', place_id)
+    if place:
+        storage.delete(place)
+        storage.save()
+        return jsonify(list_places), 200
+    abort(404)
 
 
 @app_views.route('/cities/<city_id>/places', methods=['POST\
@@ -95,17 +85,11 @@ def createPlace(city_id):
 def updatePlace(place_id):
     """Update a place if not error 404
     """
-    flag_place = 0
     place = request.get_json()
     if not place:
         abort(400, {'Not a JSON'})
-    places = storage.all('Place')
-    text_final = "{}.{}".format('Place', place_id)
-    for key, value in places.items():
-        if key == text_final:
-            flag_place = 1
-            break
-    if flag_place == 0:
+    places = storage.get('Place', place_id)
+    if not places:
         abort(404)
     pla = storage.get('Place', place_id)
     if not pla:
