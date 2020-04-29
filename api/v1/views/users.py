@@ -31,18 +31,10 @@ def displayUsers():
 def displayUserById(user_id):
     """Return user by id
     """
-    list_users = []
-    flag = 0
-    users = storage.all('User')
-    for key, value in users.items():
-        us_final = "User.{}".format(user_id)
-        if key == us_final:
-            flag = 1
-            list_users.append(value.to_dict())
-            break
-    if flag == 0:
+    user = storage.get('User', user_id)
+    if not user:
         abort(404)
-    return jsonify(list_users)
+    return jsonify(user.to_dict())
 
 
 @app_views.route('/users/<user_id>', methods=['DELETE\
@@ -50,18 +42,12 @@ def displayUserById(user_id):
 def deleteUser(user_id):
     """Delete an user if not error 404
     """
-    list_users = {}
-    flag = 0
-    users = storage.all('User')
-    for key, value in users.items():
-        if value.id == user_id:
-            flag = 1
-            storage.delete(users[key])
-            storage.save()
-            break
-    if flag == 0:
+    user = storage.get('User', user_id)
+    if not user:
         abort(404)
-    return jsonify(list_users), 200
+    storage.delete(user)
+    storage.save()
+    return jsonify({})
 
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
