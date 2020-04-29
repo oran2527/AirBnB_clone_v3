@@ -32,7 +32,6 @@ def displayPlacesByCity(city_id):
 def displayPlacesbyId(place_id):
     """Return the places by id if not error 404
     """
-    list_places = []
     place = storage.get('Place', place_id)
     if not place:
         abort(404)
@@ -49,7 +48,7 @@ def deletePlace(place_id):
     if place:
         storage.delete(place)
         storage.save()
-        return jsonify(list_places), 200
+        return jsonify({})
     abort(404)
 
 
