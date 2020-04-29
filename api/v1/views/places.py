@@ -60,19 +60,13 @@ def deletePlace(place_id):
 def createPlace(city_id):
     """Create a place for a city if not error 404
     """
-    flag_city_id = 0
     place = request.get_json()
     if not place:
         abort(400, {'Not a JSON'})
     if 'name' not in place:
         abort(400, {'Missing name'})
-    cities = storage.all('City')
-    text_final = "{}.{}".format('City', city_id)
-    for key, value in cities.items():
-        if key == text_final:
-            flag_city_id = 1
-            break
-    if flag_city_id == 0:
+    cities = storage.get('City', city_id)
+    if not cities:
         abort(404)
     place.update(city_id=city_id)
     new_place = Place(**place)
