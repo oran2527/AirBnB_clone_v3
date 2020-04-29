@@ -20,9 +20,9 @@ def displayPlacesByCity(city_id):
     """Return the places by city if not error 404
     """
     list_places = []
-    cities = storage.all('City')
-    for key, value in cities.items():
-        if value.id == city_id:
+    places = storage.all('Place')
+    for key, value in places.items():
+        if value.city_id == city_id:
             list_places.append(value.to_dict())
     if list_places == []:
         abort(404)
