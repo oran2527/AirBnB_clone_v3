@@ -19,14 +19,13 @@ from models.place import Place
 def displayPlacesByCity(city_id):
     """Return the places by city if not error 404
     """
-    list_places = []
-    places = storage.all('Place')
-    for key, value in places.items():
-        if value.city_id == city_id:
-            list_places.append(value.to_dict())
-    if list_places == []:
+    city = storage.get('City', city_id)
+    if not city:
         abort(404)
-    return jsonify(list_places)
+    lista = []
+    for i in city.places:
+        lista.append(i.to_dict())
+    return jsonify(lista)
 
 
 @app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
