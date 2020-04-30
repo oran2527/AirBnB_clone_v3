@@ -21,14 +21,13 @@ from models.user import User
 def displayReviewsByPlace(place_id):
     """Return the reviews by place if not error 404
     """
-    list_reviews = []
-    reviews = storage.all('Review')
-    for key, value in reviews.items():
-        if value.place_id == place_id:
-            list_reviews.append(value.to_dict())
-    if list_reviews == []:
+    place = storage.get('Place', place_id)
+    if not place:
         abort(404)
-    return jsonify(list_reviews)
+    lista = []
+    for i in place.reviews:
+        lista.append(i.to_dict())
+    return jsonify(lista)
 
 
 @app_views.route('/reviews/<review_id>', methods=['GET'], strict_slashes=False)
@@ -46,15 +45,12 @@ def displayReviewbyId(review_id):
 def deleteReview(review_id):
     """Delete a review if not error 404
     """
-    list_reviews = {}
-    flag = 0
     reviews = storage.get('Review', review_id)
     if not review:
         abort(404)
-    flag = 1
     storage.delete(reviews)
     storage.save()
-    return jsonify(list_reviews), 200
+    return jsonify({})
 
 
 @app_views.route('/places/<place_id>/reviews', methods=['POST\
