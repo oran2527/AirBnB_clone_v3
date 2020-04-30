@@ -46,7 +46,7 @@ def deleteReview(review_id):
     """Delete a review if not error 404
     """
     reviews = storage.get('Review', review_id)
-    if not review:
+    if not reviews:
         abort(404)
     storage.delete(reviews)
     storage.save()
