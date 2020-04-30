@@ -82,13 +82,13 @@ def createReview(place_id):
 def updateReview(review_id):
     """Update a review if not error 404
     """
-    flag_review = 0
-    review = request.get_json()
-    if not review:
-        abort(400, {'Not a JSON'})
     rev = storage.get('Review', review_id)
     if not rev:
         abort(404)
+    review = request.get_json()
+    if not review:
+        abort(400, {'Not a JSON'})
+
     ignore = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
     for key, value in review.items():
         if key not in ignore:
