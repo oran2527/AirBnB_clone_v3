@@ -66,13 +66,13 @@ def createReview(place_id):
         abort(400, {'Not a JSON'})
     if 'user_id' not in review.keys():
         abort(400, {'Missing user_id'})
-    if 'text' not in review.keys():
-        abort(400, {'Missing text'})
     userid = storage.get('User', review['user_id'])
     if not userid:
         abort(404)
+    if 'text' not in review.keys():
+        abort(400, {'Missing text'})
     new_review = Review(**review)
-    new_rewview.place_id = place_id
+    new_review.place_id = place_id
     storage.new(new_review)
     storage.save()
     return jsonify(new_review.to_dict()), 201
