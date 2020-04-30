@@ -58,25 +58,21 @@ def deleteReview(review_id):
 def createReview(place_id):
     """Create a review for a place if not error 404
     """
-    userid = ""
+    place = storage.get('Place', place_id)
+    if not place:
+        abort(404)
     review = request.get_json()
     if not review:
         abort(400, {'Not a JSON'})
-    if 'user_id' not in review:
+    if 'user_id' not in review.keys():
         abort(400, {'Missing user_id'})
-    if 'text' not in review:
+    if 'text' not in review.keys():
         abort(400, {'Missing text'})
-    for key, value in review.items():
-        if key == 'user_id':
-            userid = value
-    users = storage.get('User', userid)
-    if not users:
+    userid = storage.get('User', review['user_id'])
+    if not userid:
         abort(404)
-    places = storage.get('Place', place_id)
-    if not places:
-        abort(404)
-    review.update(place_id=place_id)
     new_review = Review(**review)
+    new_rewview.place_id = place_id
     storage.new(new_review)
     storage.save()
     return jsonify(new_review.to_dict()), 201
